@@ -70,11 +70,11 @@ class Procedure:
 
         if _exp_tree.reference.node_a.reference.type == "expression":
             self.resolve_tree(_exp_tree.reference.node_a)
-            print("resolve node a")
+            #print("resolve node a")
         if _exp_tree.reference.node_b.reference.type == "expression":
             self.resolve_tree(_exp_tree.reference.node_b)
-            print("resolve node b")
+            #print("resolve node b")
         
         if _exp_tree.reference.type == "expression" and _exp_tree.reference.node_a.reference.type == "number" and _exp_tree.reference.node_b.reference.type == "number":
-            print("makes number")
+            #print("makes number")
             _exp_tree.reference = _exp_tree.reference.op()
