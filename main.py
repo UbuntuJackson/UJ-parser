@@ -1,12 +1,15 @@
 from procedures import*
 from constants_ import*
 
-
+application_name = "uj-parser"
+debug_info = False
 
 def main():
 
     while True:
-        print("Running. Press q and hit ENTER to quit")
+        print("\n########################## " + application_name + " ###########################\n")
+        print("[!] Press q and hit ENTER to quit\n")
+
         inp_ = input("Type here: ")
 
         if 'q' in inp_:
@@ -30,7 +33,7 @@ def main():
         while made_list[0].reference.type != "number":
             procedure.resolve_tree(made_list[0])
 
-        print(made_list[0].reference.number)
+        print("(=) " + str(made_list[0].reference.number))
     
 
 main()
