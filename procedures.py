@@ -19,24 +19,28 @@ class Procedure:
                 output.append(Wrapper(Expression(current_char)))
             elif current_char in self.DIGITS:
                 text_chunk += current_char
+            elif current_char in characters.PARENTHESES:
+                if current_char == "(": output.append(Wrapper(LeftParen()))
+                if current_char == ")": output.append(Wrapper(RightParen()))
+                if a == len(_inp)-1: return
             
             if a == len(_inp)-1:
                 output.append(Wrapper(Number(text_chunk)))
 
-            #former_char = current_char
+            former_char = current_char
         
         return output
     
     def get_tokens(self, lst):
         token_list = []
         for index, i in enumerate(lst):
-            if i.reference.type == "expression": #comparison is insufficient, we should not consider the token if it's already added to the memory tree
+            if i.reference.type == "expression" or i.reference.type == "right_paren" or i.reference.type == "left_paren": #comparison is insufficient, we should not consider the token if it's already added to the memory tree
                 if i.reference.node_a is None and i.reference.node_b is None: token_list.append((index, i))
         
         return token_list
                 
 
-    def get_prioritised_token(self, lst):
+    def get_prioritised_token(self, lst): #compare current_token that was parenthesis and former token that was a parenthesis
         prioritised_token = None
         current_token = None
         former_token = None

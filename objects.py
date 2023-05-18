@@ -31,3 +31,16 @@ class Number:
     def __init__(self, number) -> None:
         self.number = float(number)
         self.type = "number"
+
+class Parentheses:
+    def __init__(self, content = None) -> None:
+        self.content = content
+        self.type = "parentheses"
+    
+class LeftParen:
+    def __init__(self) -> None:
+        self.type = "left_paren"
+
+class RightParen:
+    def __init__(self) -> None:
+        self.type = "right_paren"

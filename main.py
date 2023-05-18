@@ -1,8 +1,8 @@
 from procedures import*
 from constants_ import*
+from debug_features import*
 
 application_name = "uj-parser"
-debug_info = False
 
 def main():
 
@@ -12,13 +12,22 @@ def main():
 
         inp_ = input("Type here: ")
 
+        if inp_ == "":
+            print("Invalid: No string")
+            continue
+
         if 'q' in inp_:
             break
+        if 'd' in inp_:
+            debug_ent.show_debug_info = not debug_ent.show_debug_info
+            if debug_ent.show_debug_info: print("[!] Debugging-info enabled")
+            else: print("[!] Debugging-info disabled")
+            continue
 
-        for i in inp_:
-            if not (i in characters.DIGITS or i in characters.TOKENS):
-                print("INVALID CHARACTERS")
-                return
+        #for i in inp_:
+        #    if not (i in characters.DIGITS or i in characters.TOKENS):
+        #        print("INVALID CHARACTERS")
+        #        return
 
         procedure = Procedure()
         made_list = procedure.to_list(inp_)
@@ -29,6 +38,8 @@ def main():
             made_list = procedure.pack(prioritised_token[0], made_list)
         
             #print(made_list)
+
+        if debug_ent.show_debug_info: debug_ent.print_tree(made_list[0])
 
         while made_list[0].reference.type != "number":
             procedure.resolve_tree(made_list[0])
