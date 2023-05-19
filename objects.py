@@ -1,4 +1,5 @@
 from constants_ import*
+import math
 
 class Wrapper:
     def __init__(self, reference) -> None:
@@ -38,19 +39,17 @@ class Number:
 class Parentheses:
     def __init__(self, content = None) -> None:
         self.content = content
-        self.type = "parentheses"
+
     
 class LeftParen:
     def __init__(self) -> None:
-        self.type = "left_paren"
-
+        pass
 class RightParen:
     def __init__(self) -> None:
-        self.type = "right_paren"
+        pass
 
 class PrioritisedToken:
     def __init__(self) -> None:
-        self.type = "pri_token"
         self.index = None
 
 class ParenthesesToken:
@@ -58,3 +57,9 @@ class ParenthesesToken:
         self.type = "paren_oken"
         self.index_left = None
         self.index_right = None
+
+class Sin:
+    def __init__(self, content = None) -> None:
+        self.content = content
+    def op(self):
+        return math.sin(self.content)

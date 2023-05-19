@@ -41,6 +41,10 @@ def main():
         procedure = Procedure()
         made_list = procedure.to_list(inp_)
 
+        #print([type(i.reference) for i in made_list])
+
+        #continue
+
         while len(made_list) > 1:
             token_list = procedure.get_tokens(made_list)
             prioritised_token = procedure.get_prioritised_token(token_list)

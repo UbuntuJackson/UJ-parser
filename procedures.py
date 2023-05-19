@@ -20,11 +20,11 @@ class Procedure:
             elif current_char in characters.DIGITS or current_char in characters.LETTERS:
                 text_chunk += current_char
             elif current_char in characters.PARENTHESES:
-                if current_char == "(": output.append(Wrapper(LeftParen()))
-                if current_char == ")": output.append(Wrapper(RightParen()))
-                if a == len(_inp)-1: return
+                if current_char == '(': output.append(Wrapper(LeftParen()))
+                if current_char == ')': output.append(Wrapper(RightParen()))
+                #if a == len(_inp)-1: return
             
-            if a == len(_inp)-1:
+            if a == len(_inp)-1 and (current_char in characters.DIGITS or current_char in characters.LETTERS):
                 output.append(Wrapper(Number(text_chunk)))
 
             former_char = current_char

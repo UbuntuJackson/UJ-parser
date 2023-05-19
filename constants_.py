@@ -11,6 +11,7 @@ class ConstLists:
             "coulumb_constant" : 8.9875517923 * 10 ** 9,
             "universal_gravitational_constant" : 6.6743 * 10 ** -11,
             "G": 6.6743 * 10 ** -11,
+            "elementary_charge" : 1.6 * 10 ** -19,
 
             "pi" : 3.141592653589,
             "e" : 2.71828,
