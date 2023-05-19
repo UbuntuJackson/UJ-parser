@@ -4,12 +4,12 @@ class Wrapper:
     def __init__(self, reference) -> None:
         self.reference = reference
 
-class Expression:
+class Arithmetic:
     def __init__(self, operator, node_a = None, node_b = None) -> None:
         self.node_a = node_a
         self.node_b = node_b
         self.operator = operator
-        self.type = "expression"
+
         self.priority = None
         
         for a, i in enumerate(characters.TOKENS):
@@ -29,8 +29,11 @@ class Expression:
 
 class Number:
     def __init__(self, number) -> None:
-        self.number = float(number)
-        self.type = "number"
+        if number in characters.constant_table.keys():
+            self.number = characters.get_constant(number)
+        else:
+            self.number = float(number)
+
 
 class Parentheses:
     def __init__(self, content = None) -> None:
@@ -44,3 +47,14 @@ class LeftParen:
 class RightParen:
     def __init__(self) -> None:
         self.type = "right_paren"
+
+class PrioritisedToken:
+    def __init__(self) -> None:
+        self.type = "pri_token"
+        self.index = None
+
+class ParenthesesToken:
+    def __init__(self, index_left, index_right) -> None:
+        self.type = "paren_oken"
+        self.index_left = None
+        self.index_right = None
