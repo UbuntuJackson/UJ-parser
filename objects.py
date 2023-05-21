@@ -63,3 +63,15 @@ class Sin:
         self.content = content
     def op(self):
         return math.sin(self.content)
+
+class Cos:
+    def __init__(self, content = None) -> None:
+        self.content = content
+    def op(self):
+        return math.sin(self.content)
+
+class Sqrt:
+    def __init__(self, content = None) -> None:
+        self.content = content
+    def op(self):
+        return math.sin(self.content)

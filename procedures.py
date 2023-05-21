@@ -5,6 +5,79 @@ class Procedure:
     def __init__(self) -> None:
         pass
     
+    def is_valid_value(self, _text):
+        if _text in characters.OTHER_TOKENS: return False
+        if '(' in _text or ')' in _text: return False
+        return True
+    
+    def is_letter_or_digit(self, _ch):
+        if _ch in characters.DIGITS or _ch in characters.LETTERS: return True
+        return False
+
+    def is_token(self, _text):
+        if _text in characters.OTHER_TOKENS or _text in characters.TOKENS: return True
+        return False
+    
+    def is_func_token(self, _text):
+        if _text in characters.OTHER_TOKENS: return True
+        return False
+    
+    def is_arithmetic_token(self, _text):
+        if _text in characters.TOKENS: return True
+        return False
+
+    def determine_type(self, _text):
+        if self.is_func_token(_text): return Sin(_text)
+        if self.is_arithmetic_token(_text): return Arithmetic(_text)
+        if all([self.is_number_char(i) for i in _text]): return Number(_text)
+    
+    def interrupt(self, _text):
+        pass
+        
+
+    def to_list_2(self, _inp):
+        output = []
+        text_chunk = ""
+        current_char = None
+        former_char = None
+        for a,i in enumerate(_inp):
+            current_char = i
+            
+            text_chunk += current_char
+
+            if self.is_arithmetic_token(text_chunk):
+                output.append(Wrapper(Arithmetic(text_chunk)))
+                text_chunk = ""
+                continue
+            
+            if text_chunk == "(":
+                output.append(Wrapper(LeftParen()))
+                text_chunk = ""
+                continue
+
+            if text_chunk == ")":
+                output.append(Wrapper(RightParen()))
+                text_chunk = ""
+                continue
+
+            if a == len(_inp) - 1:
+                if self.is_func_token(text_chunk): output.append(Wrapper(Sin()))
+                else: output.append(Wrapper(Number(text_chunk)))
+                text_chunk = ""
+
+            if a < len(_inp) - 1:
+                if not self.is_letter_or_digit(_inp[a + 1]) and self.is_letter_or_digit(current_char):
+                    if self.is_func_token(text_chunk):
+                        if text_chunk == "sin": output.append(Wrapper(Sin()))
+                        elif text_chunk == "cos": output.append(Wrapper(Cos()))
+                        elif text_chunk == "sqrt": output.append(Wrapper(Sqrt()))
+                    else: output.append(Wrapper(Number(text_chunk)))
+                    text_chunk = ""
+
+            former_char = current_char
+        
+        return output
+
     def to_list(self, _inp):
         output = []
         text_chunk = ""

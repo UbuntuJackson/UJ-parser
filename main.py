@@ -39,11 +39,11 @@ def main():
             continue
 
         procedure = Procedure()
-        made_list = procedure.to_list(inp_)
+        made_list = procedure.to_list_2(inp_)
 
-        #print([type(i.reference) for i in made_list])
+        print([type(i.reference) for i in made_list])
 
-        #continue
+        continue
 
         while len(made_list) > 1:
             token_list = procedure.get_tokens(made_list)
