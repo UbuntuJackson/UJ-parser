@@ -6,7 +6,7 @@ class ConstLists:
         self.DIGITS = "0123456789."
         self.PARENTHESES = "()"
         self.LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-        self.OTHER_TOKENS = ["sin"]
+        self.OTHER_TOKENS = ["sin", "cos", "sqrt"]
         self.constant_table = {
             "g" : 9.82,
             "coulumb_constant" : 8.9875517923 * 10 ** 9,

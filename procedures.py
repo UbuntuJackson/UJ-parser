@@ -115,9 +115,40 @@ class Procedure:
         return token_list
 
     def pair_parentheses(self, _former, _current):
-        if _former in characters.PARENTHESES and _current in characters.PARENTHESES:
-            if _former == "(" and _current == ")": return (_former, _current)
+        if _former == "(" and _current == ")": return (_former, _current)
         return None
+
+    def get_paren_tokens(self, lst):
+        token_list = []
+        for index, i in enumerate(lst):
+            if (type(i.reference).__base__ == SingleArgumentToken or
+                type(i.reference) == LeftParen or
+                type(i.reference) == RightParen):
+                token_list.append((index, i))
+        
+        return token_list
+
+    def get_prioritised_paren(self, lst):
+        current_paren = None
+        former_paren = None
+        paren_exp = []
+
+        for a, i in enumerate(lst):
+            if len(paren_exp) == 0:
+                paren_exp.append(i)
+
+            elif len(paren_exp) >= 1:
+                if paren_exp[-1][1].reference.index < i[1].reference.index:
+                    paren_exp.append(i)
+                else:
+                    paren_exp = []
+                    paren_exp.append(i)
+            
+            if len(paren_exp) != 0:
+                if type(paren_exp[-1][1].reference) == RightParen:
+                    return paren_exp
+        
+        return paren_exp
 
     def get_prioritised_token(self, lst): #compare current_token that was parenthesis and former token that was a parenthesis
         prioritised_token = None
@@ -128,6 +159,8 @@ class Procedure:
         current_token = None
         former_token = None
         for a, i in enumerate(lst):
+            if type(current_paren) == RightParen and type(current_token[i]) == LeftParen: pass
+            if type(current_token[i]) == RightParen: current_paren = (i)
             #if self.pair_parentheses(current_paren, former_paren) is not None:
             #    return self.pair_parentheses(current_paren, former_paren)
             
@@ -150,7 +183,14 @@ class Procedure:
         elif type(_prioritised_token.reference) == Parentheses: #unsure of name
             Wrapper(Parentheses(desired_content[0]))
         
-            
+    def pack_prioritised_paren(self, _tok_list, lst):
+        content = []
+        if len(_tok_list) == 0: return
+        for i in range(_tok_list[-2][0]+1, _tok_list[-1][0]):
+            content.append(lst[0])
+        
+        if type(_tok_list[0][1].reference) == LeftParen: return Parentheses(content)
+        else: return type(_tok_list[0][1].reference)(content)
     
     def pack(self, _op_index, lst):
         new_lst = []

@@ -40,8 +40,19 @@ def main():
 
         procedure = Procedure()
         made_list = procedure.to_list_2(inp_)
+        tok = procedure.get_paren_tokens(made_list)
+        pri_paren = procedure.get_prioritised_paren(tok)
 
-        print([type(i.reference) for i in made_list])
+        res = procedure.pack_prioritised_paren(pri_paren, made_list)
+
+        """while len(pri_paren) != 0:
+            tok = procedure.get_paren_tokens(made_list)
+            pri_paren = procedure.get_prioritised_paren(tok)
+            #made_list = procedure.pack_paren_token(pri_paren)
+
+            pass #parentheses expressions found"""
+
+        print(res)
 
         continue
 
