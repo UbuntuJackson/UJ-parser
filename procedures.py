@@ -121,6 +121,9 @@ class Procedure:
     def get_paren_tokens(self, lst):
         token_list = []
         for index, i in enumerate(lst):
+            if type(i.reference).__base__ == SingleArgumentToken:
+                if i.reference.content != []:
+                    continue
             if (type(i.reference).__base__ == SingleArgumentToken or
                 type(i.reference) == LeftParen or
                 type(i.reference) == RightParen):
@@ -182,15 +185,30 @@ class Procedure:
             return Wrapper(Arithmetic(_prioritised_token.reference.operator, desired_content[0], desired_content[1]))
         elif type(_prioritised_token.reference) == Parentheses: #unsure of name
             Wrapper(Parentheses(desired_content[0]))
+    
+    def make_new_list(self, _made_list, _res, _pri_paren):
+        new_list = []
+        for a, wrapper in enumerate(_made_list):
+            if a == _pri_paren[0][0]:
+                new_list.append(_res)
+            elif a > _pri_paren[0][0] and a <= _pri_paren[-1][0]:
+                continue
+            else:
+                new_list.append(wrapper)
         
+        return new_list
+
     def pack_prioritised_paren(self, _tok_list, lst):
         content = []
-        if len(_tok_list) == 0: return
+        if len(_tok_list) < 2:
+            print("<2")
+            return
+        #print(_tok_list[-2][0]+1, _tok_list[-1][0])
         for i in range(_tok_list[-2][0]+1, _tok_list[-1][0]):
-            content.append(lst[0])
+            content.append(lst[i])
         
-        if type(_tok_list[0][1].reference) == LeftParen: return Parentheses(content)
-        else: return type(_tok_list[0][1].reference)(content)
+        if type(_tok_list[0][1].reference) == LeftParen: return Wrapper(Parentheses(content))
+        else: return Wrapper(type(_tok_list[0][1].reference)(content))
     
     def pack(self, _op_index, lst):
         new_lst = []

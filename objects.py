@@ -6,7 +6,7 @@ class Wrapper:
         self.reference = reference
 
 class Expression:
-    def __init__(self, content) -> None:
+    def __init__(self, content = []) -> None:
         self.content = content
     def pack(self, _op_index, lst):
         new_lst = []
@@ -56,8 +56,8 @@ class Number:
 
 
 class Parentheses(Expression):
-    def __init__(self, content = None) -> None:
-        self.content = content
+    def __init__(self, content = []) -> None:
+        super().__init__(content)
     def op(self):
         self.content = self.pack(self.content)
         return self.content
@@ -80,27 +80,27 @@ class ParenthesesToken:
         self.index_right = None
 
 class SingleArgumentToken:
-    def __init__(self, content = None) -> None:
-        self.content = content
+    def __init__(self, content) -> None:
         self.index = 0
+        self.content = content
 
 class Sin(SingleArgumentToken, Expression):
-    def __init__(self, content = None) -> None:
-        super().__init__()
+    def __init__(self, content = []) -> None:
+        super().__init__(content)
     def op(self):
         self.content = self.pack(self.content)
         return math.sin(self.content)
 
 class Cos(SingleArgumentToken, Expression):
-    def __init__(self, content = None) -> None:
-        super().__init__()
+    def __init__(self, content = []) -> None:
+        super().__init__(content)
     def op(self):
         self.content = self.pack(self.content)
         return math.cos(self.content)
 
 class Sqrt(SingleArgumentToken, Expression):
-    def __init__(self, content = None) -> None:
-        super().__init__()
+    def __init__(self, content = []) -> None:
+        super().__init__(content)
     def op(self):
         self.content = self.pack(self.content)
         return math.sqrt(self.content)
