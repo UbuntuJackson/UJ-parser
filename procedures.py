@@ -86,8 +86,8 @@ class UfoParser:
                 outp.append(Arithmetic(i))
             if self.ufo_is_number(i):
                 outp.append(Number(i))
-        w_outp = [Wrapper(i) for i in outp]
-        return w_outp
+
+        return outp
 
         
     def ufo_is_number(self, _chunk):
@@ -220,12 +220,12 @@ class UfoParser:
     def get_paren_tokens(self, lst):
         token_list = []
         for index, i in enumerate(lst):
-            if type(i.reference).__base__ == SingleArgumentToken:
-                if i.reference.content != []:
+            if type(i).__base__ == SingleArgumentToken:
+                if i.content != []:
                     continue
-            if (type(i.reference).__base__ == SingleArgumentToken or
-                type(i.reference) == LeftParen or
-                type(i.reference) == RightParen):
+            if (type(i).__base__ == SingleArgumentToken or
+                type(i) == LeftParen or
+                type(i) == RightParen):
                 token_list.append((index, i))
         
         return token_list
@@ -240,14 +240,14 @@ class UfoParser:
                 paren_exp.append(i)
 
             elif len(paren_exp) >= 1:
-                if paren_exp[-1][1].reference.index < i[1].reference.index:
+                if paren_exp[-1][1].index < i[1].index:
                     paren_exp.append(i)
                 else:
                     paren_exp = []
                     paren_exp.append(i)
             
             if len(paren_exp) != 0:
-                if type(paren_exp[-1][1].reference) == RightParen:
+                if type(paren_exp[-1][1]) == RightParen:
                     return paren_exp
         
         return paren_exp
@@ -261,8 +261,8 @@ class UfoParser:
         current_token = None
         former_token = None
         for a, i in enumerate(lst):
-            if type(current_paren) == RightParen and type(current_token[i]) == LeftParen: pass
-            if type(current_token[i]) == RightParen: current_paren = (i)
+            #if type(current_paren) == RightParen and type(current_token[i]) == LeftParen: pass
+            #if type(current_token[i]) == RightParen: current_paren = (i)
             #if self.pair_parentheses(current_paren, former_paren) is not None:
             #    return self.pair_parentheses(current_paren, former_paren)
             
@@ -306,8 +306,8 @@ class UfoParser:
         for i in range(_tok_list[-2][0]+1, _tok_list[-1][0]):
             content.append(lst[i])
         
-        if type(_tok_list[0][1].reference) == LeftParen: return Wrapper(Parentheses(content))
-        else: return Wrapper(type(_tok_list[0][1].reference)(content))
+        if type(_tok_list[0][1]) == LeftParen: return Parentheses(content)
+        else: return type(_tok_list[0][1])(content)
     
     def pack(self, _op_index, lst):
         new_lst = []

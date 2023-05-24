@@ -53,7 +53,7 @@ def main():
         expr = Expression(made_list)
 
         ans = expr.op()
-        print(ans)
+        print(ans.number)
 
         """while len(pri_paren) != 0:
             tok = procedure.get_paren_tokens(made_list)

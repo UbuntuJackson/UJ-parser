@@ -12,10 +12,10 @@ class Expression:
     def get_tokens(self, lst):
         token_list = []
         for index, i in enumerate(lst):
-            if (type(i.reference) == Arithmetic or
-                type(i.reference) == RightParen or
-                type(i.reference) == LeftParen): #comparison is insufficient, we should not consider the token if it's already added to the memory tree
-                if i.reference.node_a is None and i.reference.node_b is None: token_list.append((index, i))
+            if (type(i) == Arithmetic or
+                type(i) == RightParen or
+                type(i) == LeftParen): #comparison is insufficient, we should not consider the token if it's already added to the memory tree
+                if i.node_a is None and i.node_b is None: token_list.append((index, i))
         
         return token_list
 
@@ -36,7 +36,9 @@ class Expression:
             #if current_token in characters.PARENTHESES: current_paren = current_token
 
             if former_token is not None:
-                if current_token[1].reference.priority > prioritised_token[1].reference.priority:
+                if current_token[1].priority > prioritised_token[1].priority and current_token[1].operator != "^":
+                    prioritised_token = i
+                if current_token[1].priority >= prioritised_token[1].priority and current_token[1].operator == "^":
                     prioritised_token = i
             else:
                 prioritised_token = i
@@ -54,10 +56,10 @@ class Expression:
             if index == _op_index -1: continue
             if index == _op_index +1: continue
             if index == _op_index:
-                expr = Arithmetic(lst[index].reference.operator, lst[index-1], lst[index+1])
+                expr = Arithmetic(lst[index].operator, lst[index-1], lst[index+1])
                 new_lst.append(expr)
             else:
-                new_lst.append(i.reference)
+                new_lst.append(i)
             
         return new_lst
 
