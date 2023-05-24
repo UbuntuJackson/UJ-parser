@@ -2,7 +2,7 @@ from procedures import*
 from constants_ import*
 from debug_features import*
 
-application_name = "uj-parser"
+application_name = "UFO-Parser"
 
 def main():
 
@@ -21,9 +21,9 @@ def main():
             print("[!] Invalid: No string")
             continue
 
-        if 'q' in inp_:
+        if 'q' == inp_:
             break
-        if 'd' in inp_:
+        if 'd' == inp_:
             debug_ent.show_debug_info = not debug_ent.show_debug_info
             if debug_ent.show_debug_info: print("[!] Debugging-info enabled")
             else: print("[!] Debugging-info disabled")
@@ -37,7 +37,7 @@ def main():
         chunk_list = parser.ufo_divide_into_chunks(inp_)
 
         made_list = parser.ufo_evaluate_chunks(chunk_list)
-
+        #print(made_list)
         tok = [0]
         tok = parser.get_paren_tokens(made_list)
 

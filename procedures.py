@@ -69,7 +69,7 @@ class UfoParser:
     def ufo_evaluate_chunks(self, _list):
         outp = []
 
-        for i in _list:
+        for a, i in enumerate(_list):
             if i == "sin":
                 outp.append(Sin())
             if i == "cos":
@@ -79,13 +79,30 @@ class UfoParser:
 
             if i == "(":
                 outp.append(LeftParen())
+                self.awaited_tokens.append(i)
             if i == ")":
                 outp.append(RightParen())
             
             if self.is_arithmetic_token(i):
-                outp.append(Arithmetic(i))
+                if len(self.awaited_tokens) == 0 and a != 0: outp.append(Arithmetic(i))
+                self.awaited_tokens.append(i)
             if self.ufo_is_number(i):
-                outp.append(Number(i))
+                sign = 1
+
+                if len(self.awaited_tokens) >= 2:
+                    for aw in range(1, len(self.awaited_tokens)):
+                        
+                        if self.awaited_tokens[aw] == "-":
+                            sign *= -1
+                if (len(self.awaited_tokens) == 1 and a == 1):
+                    for aw in range(0, len(self.awaited_tokens)):
+                        
+                        if self.awaited_tokens[aw] == "-":
+                            sign *= -1
+                    
+                
+                outp.append(Number(i, sign))
+                self.awaited_tokens = []
 
         return outp
 

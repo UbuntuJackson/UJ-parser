@@ -112,11 +112,11 @@ class Arithmetic:
             return Number(self.node_a.op().number ** self.node_b.op().number)
 
 class Number:
-    def __init__(self, number) -> None:
+    def __init__(self, number, sign = 1) -> None:
         if number in characters.constant_table.keys():
-            self.number = characters.get_constant(number)
+            self.number = characters.get_constant(number) * sign
         else:
-            self.number = float(number)
+            self.number = float(number) * sign
     
     def op(self):
         return self
