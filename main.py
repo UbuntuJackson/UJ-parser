@@ -20,12 +20,6 @@ def main():
         if inp_ == "":
             print("[!] Invalid: No string")
             continue
-        
-        """if (not inp_ in characters.commands and
-            not any([(letter in inp_) for letter in characters.DIGITS]) and
-            not any([(letter in inp_) for letter in characters.TOKENS])):
-            print("[!] Invalid, not a command, digit, or token")
-            continue"""
 
         if 'q' in inp_:
             break
@@ -38,31 +32,28 @@ def main():
             characters.display_const_table = not characters.display_const_table
             continue
 
-        procedure = Procedure()
-        made_list = procedure.to_list_2(inp_)
-        #tok = procedure.get_paren_tokens(made_list)
-        #pri_paren = procedure.get_prioritised_paren(tok)
+        parser = UfoParser()
+
+        chunk_list = parser.ufo_divide_into_chunks(inp_)
+
+        made_list = parser.ufo_evaluate_chunks(chunk_list)
 
         tok = [0]
-        tok = procedure.get_paren_tokens(made_list)
+        tok = parser.get_paren_tokens(made_list)
 
         while len(tok) != 0:
-            tok = procedure.get_paren_tokens(made_list)
-            pri_paren = procedure.get_prioritised_paren(tok)
-            res = procedure.pack_prioritised_paren(pri_paren, made_list)
+            tok = parser.get_paren_tokens(made_list)
+            pri_paren = parser.get_prioritised_paren(tok)
+            res = parser.pack_prioritised_paren(pri_paren, made_list)
             #print(res.reference.content)
-            made_list = procedure.make_new_list(made_list, res, pri_paren)
-            tok = procedure.get_paren_tokens(made_list)
+            made_list = parser.make_new_list(made_list, res, pri_paren)
+            tok = parser.get_paren_tokens(made_list)
             if len(tok) == 0: break
-        
-        #ans = made_list[0].reference.pack()
-        #print(ans)
 
-        #print([i.reference for i in made_list])
-        #tok = procedure.get_paren_tokens(made_list)
-        #pri_paren = procedure.get_prioritised_paren(tok)
-        #res = procedure.pack_prioritised_paren(pri_paren, made_list)
-        #made_list = procedure.make_new_list(made_list, res, pri_paren)
+        expr = Expression(made_list)
+
+        ans = expr.op()
+        print(ans)
 
         """while len(pri_paren) != 0:
             tok = procedure.get_paren_tokens(made_list)
@@ -71,7 +62,7 @@ def main():
 
             pass #parentheses expressions found"""
 
-        #print([i.reference.content[1].reference for i in made_list])
+        #print([i.reference for i in made_list])
 
         continue
 

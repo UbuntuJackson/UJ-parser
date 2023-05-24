@@ -1,16 +1,115 @@
 from objects import*
 from constants_ import*
 
-class Procedure:
+class UfoParser:
     def __init__(self) -> None:
-        pass
+        self.awaited_tokens = [] #if minus, then "Number, LeftParen"
     
+    def ufo_is_valid_syntax(self, _expression_list):
+        pending_expectations = []
+        for a, list_member in enumerate(_expression_list):
+            if a == len(_expression_list):
+                #is list_member fine to be last in expression
+                return
+            
+            exp_res = list_member.evaluate_expectation(_expression_list[a+1])
+            
+            if exp_res != None:
+                pending_expectations.append(exp_res)
+
+    def ufo_identify(self, _chunk, _next_character = None):
+
+
+
+        if self.is_arithmetic_token(_chunk):
+            return Wrapper(Arithmetic(_chunk)) #if next token is Arithmetic, somehow await number
+        
+        if _chunk == "(":
+            return Wrapper(LeftParen())
+        if _chunk == ")":
+            return Wrapper(LeftParen())
+
+        if self.is_letter_or_digit(_chunk):
+            pass
+
+        if _next_character == None:
+            print("INVALID")
+            return None
+
+        return None
+    
+    def ufo_cut_off(self, char_1, char_2, _chunk = None):
+
+        if char_1 == '(': return True
+
+        if char_1 == ')': return True
+
+        if self.ufo_is_letter_or_digit(char_1) and not self.ufo_is_letter_or_digit(char_2):
+            return True
+        
+        if self.is_arithmetic_token(char_1): return True
+
+        return False
+
+    def ufo_divide_into_chunks(self, _inp):
+        outp = []
+        chunk = ""
+        for a,i in enumerate(_inp):
+            if i != " ": chunk += i
+            if a == len(_inp) -1:
+
+                outp.append(chunk)
+                break
+
+            if self.ufo_cut_off(_inp[a], _inp[a+1]):
+                outp.append(chunk)
+                chunk = ""
+        return outp
+    
+    def ufo_evaluate_chunks(self, _list):
+        outp = []
+
+        for i in _list:
+            if i == "sin":
+                outp.append(Sin())
+            if i == "cos":
+                outp.append(Cos())
+            if i == "sqrt":
+                outp.append(Sqrt())
+
+            if i == "(":
+                outp.append(LeftParen())
+            if i == ")":
+                outp.append(RightParen())
+            
+            if self.is_arithmetic_token(i):
+                outp.append(Arithmetic(i))
+            if self.ufo_is_number(i):
+                outp.append(Number(i))
+        w_outp = [Wrapper(i) for i in outp]
+        return w_outp
+
+        
+    def ufo_is_number(self, _chunk):
+        if self.ufo_any_of_a_in_b(_chunk, characters.LETTERS) and _chunk[0] in characters.LETTERS:
+            return False
+        if _chunk in characters.OTHER_TOKENS:
+            return False
+        for i in _chunk:
+            if not self.ufo_is_letter_or_digit(i):
+                return False
+        
+        return True
+    
+    def ufo_any_of_a_in_b(self, a, b):
+        any([i in b for i in a])
+
     def is_valid_value(self, _text):
         if _text in characters.OTHER_TOKENS: return False
         if '(' in _text or ')' in _text: return False
         return True
     
-    def is_letter_or_digit(self, _ch):
+    def ufo_is_letter_or_digit(self, _ch):
         if _ch in characters.DIGITS or _ch in characters.LETTERS: return True
         return False
 
