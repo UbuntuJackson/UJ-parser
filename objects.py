@@ -113,27 +113,30 @@ class Arithmetic:
 
 class Number:
     def __init__(self, number, sign = 1) -> None:
+        self.sign = sign
         if number in characters.constant_table.keys():
-            self.number = characters.get_constant(number) * sign
+            self.number = characters.get_constant(number)
         else:
-            self.number = float(number) * sign
+            self.number = float(number)
     
     def op(self):
-        return self
+        return Number(self.sign * self.number)
 
 
 class Parentheses(Expression):
-    def __init__(self, content = []) -> None:
+    def __init__(self, content = [], sign = 1) -> None:
         super().__init__(content)
+        self.sign = sign
     def op(self):
         self.pack()
-        return self.content.op() #alrady a number
+        return Number(self.sign * self.content.op().number) #alrady a number
         
 
     
 class LeftParen:
-    def __init__(self) -> None:
+    def __init__(self, sign) -> None:
         self.index = 1
+        self.sign = sign
         self.expectations = ["number", "arithmetic"]
         self.pending_expectation = ["right_paren"]
     
@@ -155,13 +158,7 @@ class PrioritisedToken:
     def __init__(self) -> None:
         self.index = None
 
-class ParenthesesToken:
-    def __init__(self, index_left, index_right) -> None:
-        self.index_left = None
-        self.index_right = None
-    def op(self):
-        self.content = self.pack(self.content)[0]
-        return math.sin(self.content)
+
 
 class SingleArgumentToken:
     def __init__(self, content) -> None:
@@ -169,22 +166,25 @@ class SingleArgumentToken:
         self.content = content
 
 class Sin(SingleArgumentToken, Expression):
-    def __init__(self, content = []) -> None:
+    def __init__(self, content = [], sign = 1) -> None:
         super().__init__(content)
+        self.sign = sign
     def op(self):
         self.pack()
-        return Number(math.sin(self.content.op().number))
+        return Number(self.sign * math.sin(self.content.op().number))
 
 class Cos(SingleArgumentToken, Expression):
-    def __init__(self, content = []) -> None:
+    def __init__(self, content = [], sign = 1) -> None:
         super().__init__(content)
+        self.sign = sign
     def op(self):
         self.pack()
-        return Number(math.cos(self.content.op().number))
+        return Number(self.sign * math.cos(self.content.op().number))
 
 class Sqrt(SingleArgumentToken, Expression):
-    def __init__(self, content = []) -> None:
+    def __init__(self, content = [], sign = 1) -> None:
         super().__init__(content)
+        self.sign = sign
     def op(self):
         self.pack()
-        return Number(math.sqrt(self.content.op().number))
+        return Number(self.sign * math.sqrt(self.content.op().number))

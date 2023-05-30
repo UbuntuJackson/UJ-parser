@@ -6,10 +6,10 @@ class DispUserData:
             if i == '=':
                 self.user_vars[expr[:a]] = expr[a+1:]
 
-d = DispUserData()
+user_data = DispUserData()
 
-inp = input()
+#inp = input()
 
-d.parse_var_expr(inp)
+#d.parse_var_expr(inp)
 
-print(d.user_vars)
+#print(d.user_vars)

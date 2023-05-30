@@ -66,43 +66,106 @@ class UfoParser:
                 chunk = ""
         return outp
     
+    def ufo_get_sign(self, _list, _char_index):
+        if _char_index == 0: return 1
+
+        expects_sign = [None, '/', '*', '^', '(', ')']
+        #handle different depending on stumble upon expects_sign member or digit sign
+        #condition: None and awaiting_signs.len() == 1
+        lst = [None] + _list
+        sign = 1
+        i = _char_index
+        awaiting_signs = []
+        while lst[i] not in expects_sign and not self.ufo_is_number(lst[i]):
+            if lst[i] == '-': awaiting_signs.append('-')
+            i-=1
+
+        if lst[i] in expects_sign:
+            print(lst[i])
+            for j in awaiting_signs:
+                if j == '-':
+                    sign *= -1
+            
+            return sign
+        
+        if len(awaiting_signs) == []: return sign
+
+        for j in range(1, len(awaiting_signs)):
+            if awaiting_signs[j] == '-':
+                sign *= -1
+        
+        print(awaiting_signs)
+
+        return sign
+    
+    def ufo_allow_add_arithmetic(self, _list, _char_index):
+        
+        if _list[_char_index] in ['-', '+']:
+
+            if _char_index == len(_list)-1 or _char_index == 0: return False
+            if _list[_char_index - 1] in ['-', '+']: return False
+
+            lst = [None] + _list
+            i = _char_index+1
+
+            if lst[i-1] in [None, '/', '*', '^', '(', ')']:
+                return False
+        
+        return True
+    
+    def ufo_convert_sign(self):
+        pass
+
+
     def ufo_evaluate_chunks(self, _list):
         outp = []
+        expr_reset = True
 
         for a, i in enumerate(_list):
+            if self.is_arithmetic_token(i):
+                if self.ufo_allow_add_arithmetic(_list, a): outp.append(Arithmetic(i))
+            
+            """sign = 1
+
+            if len(self.awaited_tokens) >= 2:
+                for aw in range(1, len(self.awaited_tokens)):
+                    
+                    if self.awaited_tokens[aw] == "-":
+                        sign *= -1
+
+            if (len(self.awaited_tokens) == 1 and expr_reset):
+                for aw in range(0, len(self.awaited_tokens)):
+                    
+                    if self.awaited_tokens[aw] == "-":
+                        sign *= -1"""
+
+            sign = self.ufo_get_sign(_list, a)
+            #print(sign)
+
             if i == "sin":
-                outp.append(Sin())
+                outp.append(Sin([], sign))
+                self.awaited_tokens = []
             if i == "cos":
-                outp.append(Cos())
+                outp.append(Cos([], sign))
+                self.awaited_tokens = []
             if i == "sqrt":
-                outp.append(Sqrt())
+                outp.append(Sqrt([], sign))
+                self.awaited_tokens = []
 
             if i == "(":
-                outp.append(LeftParen())
-                self.awaited_tokens.append(i)
+                outp.append(LeftParen(sign))
+                expr_reset = True #should indicate restart meaning that we accept first minus token
             if i == ")":
                 outp.append(RightParen())
             
-            if self.is_arithmetic_token(i):
-                if len(self.awaited_tokens) == 0 and a != 0: outp.append(Arithmetic(i))
-                self.awaited_tokens.append(i)
+            
             if self.ufo_is_number(i):
-                sign = 1
-
-                if len(self.awaited_tokens) >= 2:
-                    for aw in range(1, len(self.awaited_tokens)):
-                        
-                        if self.awaited_tokens[aw] == "-":
-                            sign *= -1
-                if (len(self.awaited_tokens) == 1 and a == 1):
-                    for aw in range(0, len(self.awaited_tokens)):
-                        
-                        if self.awaited_tokens[aw] == "-":
-                            sign *= -1
+                
                     
                 
                 outp.append(Number(i, sign))
                 self.awaited_tokens = []
+            expr_reset = False
 
         return outp
 
@@ -323,7 +386,7 @@ class UfoParser:
         for i in range(_tok_list[-2][0]+1, _tok_list[-1][0]):
             content.append(lst[i])
         
-        if type(_tok_list[0][1]) == LeftParen: return Parentheses(content)
+        if type(_tok_list[0][1]) == LeftParen: return Parentheses(content, _tok_list[0][1].sign)
         else: return type(_tok_list[0][1])(content)
     
     def pack(self, _op_index, lst):
@@ -356,3 +419,5 @@ class UfoParser:
             type(_exp_tree.reference.node_b.reference) == Number):
             #print("makes number")
             _exp_tree.reference = _exp_tree.reference.op()
+
+parser = UfoParser()

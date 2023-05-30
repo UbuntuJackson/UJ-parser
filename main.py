@@ -1,6 +1,7 @@
 from procedures import*
 from constants_ import*
 from debug_features import*
+#from command_manager import*
 
 application_name = "UFO-Parser"
 
@@ -31,13 +32,16 @@ def main():
         if inp_ == "constants":
             characters.display_const_table = not characters.display_const_table
             continue
-
-        parser = UfoParser()
+        
+        #command = CommandManager()
+        #res = command.command_divide_into_chunks(inp_)
+        #print(res)
+        #continue
 
         chunk_list = parser.ufo_divide_into_chunks(inp_)
 
         made_list = parser.ufo_evaluate_chunks(chunk_list)
-        #print(made_list)
+        print(made_list)
         tok = [0]
         tok = parser.get_paren_tokens(made_list)
 
